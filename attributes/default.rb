@@ -88,3 +88,5 @@ default.glassfish.ciphersuite				= "+TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,+TL
 											
 
 node.normal.java.jdk_version               = 7
+
+default.hopsworks.shibboleth               = "false"

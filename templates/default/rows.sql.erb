@@ -46,7 +46,6 @@ INSERT INTO `organization` (`id`, `uid`, `org_name`, `website`, `contact_person`
 
 
 
-
 -- --------------------------------------------------------
 --
 --   Adding a new address entry for admin user
@@ -99,8 +98,10 @@ INSERT INTO variables VALUES ("yarn_ui_ip", "<%= @yarn_ui_ip %>");
 
 INSERT INTO variables VALUES ("yarn_ui_port", "<%= @yarn_ui_port %>");
 
--- ------
--- Kafka settings
+INSERT INTO variables VALUES ("hopsworks_master_password", "<%= node.hopsworks.master.password %>");
+
+-- --------------------------------------------------------
+-- Kafka 
 --
 
 INSERT INTO variables VALUES ("zk_ip", "<%= @zk_ip %>");
@@ -113,27 +114,48 @@ INSERT INTO variables VALUES ("kafka_num_partitions", "<%= @kafka_num_partitions
 
 INSERT INTO variables VALUES ("kafka_num_replicas", "<%= @kafka_num_replicas %>");
 
+
+
+-- --------------------------------------------------------
+-- Dr Elephant
+--
+
 INSERT INTO variables VALUES ("drelephant_port", "<%= @drelephant_port %>");
 
 INSERT INTO variables VALUES ("drelephant_ip", "<%= @drelephant_ip %>");
 
 INSERT INTO variables VALUES ("drelephant_db", "<%= @drelephant_db %>");
 
-INSERT INTO variables VALUES ("hopsworks_master_password", "<%= node.hopsworks.master.password %>");
 -- --------------------------------------------------------
 --
--- For enabling two facto authentication
+-- For enabling two factor authentication
 --
 
 INSERT INTO variables VALUES ("twofactor_auth", "<%= @twofactor_auth %>");
 
+-- --------------------------------------------------------
+--
 -- ePipe
+--
 
 INSERT INTO epipe_recovery VALUES (1, 0);
 INSERT INTO epipe_recovery VALUES (2, 0);
 INSERT INTO epipe_recovery VALUES (3, 0);
 
-
+-- --------------------------------------------------------
+--
 -- kmon
+--
 
 INSERT INTO hosts(hostid, hostname_) VALUES <%= @hosts %>;
+
+
+-- --------------------------------------------------------
+--
+-- shibboleth
+--
+
+INSERT INTO variables VALUES ("shibboleth", "<%= node.hopsworks.shibboleth %>");
+
+INSERT INTO variables VALUES ("apache_ip", "<%= @apache_ip %>");
+

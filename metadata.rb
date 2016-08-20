@@ -51,6 +51,11 @@ attribute "hopsworks/twofactor_auth",
           :type => 'string',
           :required => "required"
 
+attribute "hopsworks/shibboleth",
+          :description => "shibboleth (default: false)",
+          :type => 'string',
+          :required => "required"
+
 attribute "hopsworks/gmail/email",
           :description => "Email address for gmail account",
           :required => "required",

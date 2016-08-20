@@ -96,6 +96,15 @@ rescue
   Chef::Log.warn "could not find the dr elephant server ip!"
 end
 
+begin
+  apache_ip = private_recipe_ip("shibboleth","default")
+rescue 
+  apache_ip = node.hostname
+  Chef::Log.warn "could not find the apache server ip for shibboleth!"
+end
+
+
+
 tables_path = "#{domains_dir}/tables.sql"
 rows_path = "#{domains_dir}/rows.sql"
 
@@ -180,6 +189,7 @@ template "#{rows_path}" do
                 :yarn_default_quota => node.hopsworks.yarn_default_quota_mins.to_i * 60,
                 :hdfs_default_quota => node.hopsworks.hdfs_default_quota_mbs.to_i,
                 :max_num_proj_per_user => node.hopsworks.max_num_proj_per_user,
+                :apache_ip => apache_ip,                
                 :zk_ip => zk_ip,
                 :kafka_ip => kafka_ip,                
                 :kafka_num_replicas => node.hopsworks.kafka_num_replicas,
