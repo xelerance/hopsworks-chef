@@ -138,7 +138,7 @@ end
 
 template timerTablePath do
   source File.basename("#{timerTablePath}") + ".erb"
-  owner "root"
+  owner node.glassfish.user
   mode 0750
   action :create
   notifies :create_timers, 'hopsworks_grants[timers_tables]', :immediately
@@ -185,6 +185,7 @@ template "#{rows_path}" do
                 :elastic_dir => node.elastic.dir + "/elastic",
                 :hopsworks_dir => node.glassfish.domains_dir,
                 :twofactor_auth => node.hopsworks.twofactor_auth,
+                :twofactor_exclude_groups => node.hopsworks.twofactor_exclude_groups,
                 :elastic_user => node.elastic.user,
                 :yarn_default_quota => node.hopsworks.yarn_default_quota_mins.to_i * 60,
                 :hdfs_default_quota => node.hopsworks.hdfs_default_quota_mbs.to_i,
@@ -294,6 +295,7 @@ props =  {
      'user-name-column' => 'email',
      'group-table-user-name-column' => 'email',
      'otp-secret-column' => 'secret',
+     'two-factor-column' => 'two_factor',
      'user-status-column' => 'status',
      'yubikey-table' => 'hopsworks.yubikey',
      'variables-table' => 'hopsworks.variables'
@@ -401,6 +403,29 @@ glassfish_asadmin "set 'configs.config.server-config.iiop-service.iiop-listener.
    admin_port admin_port
    secure false
 end
+
+
+# Needed by Shibboleth
+glassfish_asadmin "create-network-listener --protocol http-listener-1 --listenerport 8009 --jkenabled true jk-connector" do
+   domain_name domain_name
+   password_file "#{domains_dir}/#{domain_name}_admin_passwd"
+   username username
+   admin_port admin_port
+   secure false
+  not_if "#{asadmin} --user #{username} --passwordfile #{admin_pwd}  list-http-listeners | grep 'jk-listener'"
+end
+
+# Needed by Shibboleth
+glassfish_asadmin "set-log-levels org.glassfish.grizzly.http.server.util.RequestUtils=SEVERE" do
+   domain_name domain_name
+   password_file "#{domains_dir}/#{domain_name}_admin_passwd"
+   username username
+   admin_port admin_port
+   secure false
+end
+
+
+# Needed by AJP and Shibboleth - https://github.com/payara/Payara/issues/350
 
 
 # Enable Single Sign on

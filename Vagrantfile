@@ -18,8 +18,10 @@ Vagrant.configure("2") do |c|
   c.vm.hostname = "default-ubuntu-1404.vagrantup.com"
 
 # Ssh port on vagrant
-  c.vm.network(:forwarded_port, {:guest=>22, :host=>20005})
+  c.vm.network(:forwarded_port, {:guest=>22, :host=>50070})
 # MySQL Server
+  c.vm.network(:forwarded_port, {:guest=>9090, :host=>9090})
+
   c.vm.network(:forwarded_port, {:guest=>3306, :host=>13009})
 # HTTP webserver
   c.vm.network(:forwarded_port, {:guest=>8080, :host=>8080})
@@ -28,7 +30,7 @@ Vagrant.configure("2") do |c|
 # Glassfish webserver
   c.vm.network(:forwarded_port, {:guest=>4848, :host=>4848})
 # HDFS webserver
-  c.vm.network(:forwarded_port, {:guest=>50070, :host=>50070})
+  c.vm.network(:forwarded_port, {:guest=>50070, :host=>50071})
 # Datanode 
   c.vm.network(:forwarded_port, {:guest=>50075, :host=>50075})
 # YARN webserver
@@ -198,6 +200,7 @@ Vagrant.configure("2") do |c|
       chef.add_recipe "adam::install"
 #      chef.add_recipe "oozie::install"
       chef.add_recipe "drelephant::install"
+      chef.add_recipe "kkafka::install"
       chef.add_recipe "ndb::mgmd"
       chef.add_recipe "ndb::ndbd"
       chef.add_recipe "ndb::mysqld"
@@ -215,13 +218,13 @@ Vagrant.configure("2") do |c|
       chef.add_recipe "livy::default"
       chef.add_recipe "hopsworks::default"
       chef.add_recipe "hopsworks::dev"
-      chef.add_recipe "kagent::default"
       chef.add_recipe "epipe::default"
       chef.add_recipe "kzookeeper::default"
-      chef.add_recipe "kkafka::install"
       chef.add_recipe "kkafka::default"
       chef.add_recipe "adam::default"
       chef.add_recipe "drelephant::default"
+      chef.add_recipe "kagent::default"
+      #chef.add_recipe "tensorflow::install"
 #      chef.add_recipe "oozie::default"
 
   end 

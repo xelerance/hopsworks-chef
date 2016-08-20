@@ -13,7 +13,7 @@ mysql_user=node.mysql.user
 mysql_password=node.mysql.password
 #mysql_host = private_recipe_ip("ndb","mysqld")
 mysql_host = my_private_ip()
-
+password_file = "#{domains_dir}/#{domain_name}_admin_passwd"
 
 case node.platform
 when "ubuntu"
@@ -378,5 +378,28 @@ remote_file "#{node.glassfish.install_dir}/glassfish/modules/guava.jar" do
   source node.hopsworks.guava_url
   mode 0644
   action :create_if_missing
+end
+
+
+# Replace sysv with our version. It increases the max number of open files limit (ulimit -n)
+case node.platform
+when "ubuntu"
+  file "/etc/init.d/glassfish-#{domain_name}" do
+    owner "root"
+    action :delete
+  end
+
+ template "/etc/init.d/glassfish-#{domain_name}" do
+    source "glassfish.erb"
+    owner "root"
+    mode 0744
+    action :create
+  variables({
+       :domain_name =>  domain_name,
+       :password_file => password_file
+   })
+
+ end 
+
 end
 
