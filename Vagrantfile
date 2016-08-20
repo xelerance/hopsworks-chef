@@ -86,6 +86,7 @@ Vagrant.configure("2") do |c|
 	       },
 	"war_url" => "http://snurran.sics.se/hops/hopsworks.war",
         "user_envs" => "false",
+        "twofactor_auth" => "true",
      },
      "zeppelin" => {
 	  "default" =>      { 
