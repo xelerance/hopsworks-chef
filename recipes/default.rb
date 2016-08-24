@@ -406,6 +406,9 @@ end
 
 
 # Needed by Shibboleth
+# http://blog.c2b2.co.uk/2013/03/creating-simple-cluster-with-glassfish.html
+# https://docs.oracle.com/cd/E26576_01/doc.312/e24928/webapps.htm#GSADG1049
+# https://wiki.shibboleth.net/confluence/display/SHIB2/Java+EE+Container-Managed+Authentication
 glassfish_asadmin "create-network-listener --protocol http-listener-1 --listenerport 8009 --jkenabled true jk-connector" do
    domain_name domain_name
    password_file "#{domains_dir}/#{domain_name}_admin_passwd"
