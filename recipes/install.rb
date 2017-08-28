@@ -20,7 +20,7 @@ password_file = "#{theDomain}_admin_passwd"
 
 case node["platform_family"]
 when "debian"
-  
+
   if node.platform_version.to_f <= 14.04
     node.override["hopsworks"]["systemd"] = "false"
   end
@@ -29,7 +29,7 @@ when "debian"
 
 when "rhel"
   package "krb5-libs"
-  
+
   remote_file "#{Chef::Config[:file_cache_path]}/dtrx.tar.gz" do
     user node["glassfish"]["user"]
     group node["glassfish"]["group"]
@@ -37,7 +37,7 @@ when "rhel"
     mode 0755
     action :create
   end
-  
+
   bash "unpack_dtrx" do
     user "root"
     code <<-EOF
@@ -59,7 +59,7 @@ bash "systemd_reload_for_glassfish_failures" do
 end
 
 
-if node["hopsworks"]["systemd"] === "true" 
+if node["hopsworks"]["systemd"] === "true"
   systemd = true
 else
   systemd = false
@@ -132,7 +132,7 @@ node.override = {
           'min_memory' => node["glassfish"]["min_mem"],
           'max_memory' => node["glassfish"]["max_mem"],
           'max_perm_size' => node["glassfish"]["max_perm_size"],
-          'max_stack_size' => node["glassfish"]["max_stack_size"], 
+          'max_stack_size' => node["glassfish"]["max_stack_size"],
           'port' => web_port,
           'admin_port' => admin_port,
           'username' => username,
@@ -184,7 +184,7 @@ node.override = {
             'corepoolsize' => 12,
             'description' => 'Hopsworks Executor Service'
           }
-        },        
+        },
         'jdbc_connection_pools' => {
           'hopsworksPool' => {
             'config' => {
@@ -274,7 +274,7 @@ template "#{theDomain}/docroot/404.html" do
               :org_name => node["hopsworks"]["org_name"]
             })
   action :create
-end 
+end
 
 cookbook_file"#{theDomain}/docroot/obama-smoked-us.gif" do
   source 'obama-smoked-us.gif'
@@ -299,7 +299,7 @@ when "rhel"
   # Needed by sparkmagic
   package "krb5-libs"
   package "krb5-devel"
-  
+
   service_name = "glassfish-#{domain_name}"
   file "/etc/systemd/system/#{service_name}.service" do
     owner "root"
@@ -334,14 +334,14 @@ if systemd == true
     owner "root"
     mode 0774
     action :create
-  end 
+  end
 
   hopsworks_grants "reload_systemd" do
     tables_path  ""
     views_path ""
     rows_path  ""
     action :reload_systemd
-  end 
+  end
 
 end
 
@@ -356,7 +356,7 @@ end
 
 dirs = %w{certs crl newcerts private intermediate}
 
-for d in dirs 
+for d in dirs
   directory "#{ca_dir}/#{d}" do
     owner node["glassfish"]["user"]
     group node["glassfish"]["group"]
@@ -367,7 +367,7 @@ end
 
 int_dirs = %w{certs crl csr newcerts private}
 
-for d in int_dirs 
+for d in int_dirs
   directory "#{ca_dir}/intermediate/#{d}" do
     owner node["glassfish"]["user"]
     group node["glassfish"]["group"]
@@ -384,7 +384,7 @@ template "#{ca_dir}/openssl-ca.cnf" do
               :ca_dir =>  "#{ca_dir}"
             })
   action :create
-end 
+end
 
 template "#{ca_dir}/intermediate/openssl-intermediate.cnf" do
   source "intermediateopenssl.cnf.erb"
@@ -394,7 +394,7 @@ template "#{ca_dir}/intermediate/openssl-intermediate.cnf" do
               :int_ca_dir =>  "#{ca_dir}/intermediate"
             })
   action :create
-end 
+end
 
 template "#{ca_dir}/intermediate/createusercerts.sh" do
   source "createusercerts.sh.erb"
@@ -507,10 +507,10 @@ template "/etc/sudoers.d/glassfish" do
               :delete_projectcert =>  "#{ca_dir}/intermediate/deleteprojectcerts.sh",
               :ndb_backup =>  "#{theDomain}/bin/ndb_backup.sh",
               :jupyter =>  "#{theDomain}/bin/jupyter.sh",
-              :jupyter_cleanup =>  "#{theDomain}/bin/jupyter-project-cleanup.sh"                                
+              :jupyter_cleanup =>  "#{theDomain}/bin/jupyter-project-cleanup.sh"
             })
   action :create
-end  
+end
 
 # Replace sysv with our version. It increases the max number of open files limit (ulimit -n)
 case node.platform
@@ -530,7 +530,7 @@ when "ubuntu"
                 :password_file => password_file
               })
 
-  end 
+  end
 
 end
 
@@ -543,7 +543,7 @@ end
 
 user node["jupyter"]["user"] do
   home node["jupyter"]["base_dir"]
-  gid node["jupyter"]["group"]  
+  gid node["jupyter"]["group"]
   action :create
   shell "/bin/bash"
   manage_home true
@@ -568,6 +568,17 @@ directory node["jupyter"]["base_dir"]  do
   not_if "test -d #{node["jupyter"]["base_dir"]}"
 end
 
+directory node["hopssite"]["certs_dir"] do
+  owner node["glassfish"]["user"]
+  mode "750"
+  action :create
+end
+
+directory node["hopssite"]["keystore_dir"] do
+  owner node["glassfish"]["user"]
+  mode "750"
+  action :create
+end
 
 template "#{theDomain}/config/ca.ini" do
   source "ca.ini.erb"
@@ -576,21 +587,26 @@ template "#{theDomain}/config/ca.ini" do
   action :create
 end
 
-# template "#{theDomain}/bin/csr-ca.py" do
-#   source "csr-ca.py"
-#   owner node["glassfish"]["user"]
-#   mode 0750
-#   action :create
-# end
-# template "#{theDomain}/bin/ca-keystore.sh" do
-#   source "ca-keystore.sh.erb"
-#   owner node["glassfish"]["user"]
-#   mode 0750
-#   action :create
-# end
+template "#{theDomain}/bin/csr-ca.py" do
+  source "csr-ca.py"
+  owner node["glassfish"]["user"]
+  mode 0750
+  action :create
+end
 
-# if node['hopssite']['user'].isEmpty? == false
-#   hopsworks_certs "sign-ca-with-root-hopssite-ca" do
-#     action :sign_hopssite
-#   end
-# end
+template "#{theDomain}/bin/ca-keystore.sh" do
+  source "ca-keystore.sh.erb"
+  owner node["glassfish"]["user"]
+  mode 0750
+  action :create
+  variables({
+         :directory => node["hopssite"]["keystore_dir"],
+         :keystorepass => node["hopsworks"]["master"]["password"]
+  })
+end
+
+if node['hopssite']['user'].isEmpty? == false
+  hopsworks_certs "sign-ca-with-root-hopssite-ca" do
+    action :sign_hopssite
+  end
+end
