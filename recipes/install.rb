@@ -118,6 +118,7 @@ end
 
 # For unzipping files
 
+dtrx='dtrx'
 case node['platform_family']
 when "debian"
 
@@ -149,6 +150,7 @@ when "rhel"
   EOF
     not_if "which dtrx"
   end
+  dtrx="/usr/local/bin/dtrx"
 end
 
 
@@ -551,6 +553,9 @@ template "#{theDomain}/bin/unzip-hdfs-files.sh" do
   group node['glassfish']['group']
   mode "550"
   action :create
+  variables({
+              :dtrx => dtrx
+            })
 end
 
 template "#{theDomain}/bin/unzip-background.sh" do
