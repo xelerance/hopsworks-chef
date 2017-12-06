@@ -1193,3 +1193,11 @@ template "#{theDomain}/docroot/nbextensions/facets-dist/facets-jupyter.html" do
   mode 0775
   action :create
 end
+
+
+hops_hdfs_directory "/user/#{node['glassfish']['user']}/webserver_logs" do
+  action :create_as_superuser
+  owner node['glassfish']['user']
+  group node['glassfish']['group']
+  mode "1750"
+end

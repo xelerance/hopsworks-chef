@@ -1449,6 +1449,10 @@ attribute "ndb/mysql_socket",
           :description => "Socket for the mysql server",
           :type => "string"
 
+attribute "kagent/password",
+          :description => "Agent's password - needed to call REST APIs on the kagent",
+          :type => 'string'
+
 attribute "systemd",
           :description => "Use systemd startup scripts, default 'true'",
           :type => "string"
