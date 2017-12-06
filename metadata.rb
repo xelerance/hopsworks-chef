@@ -291,6 +291,10 @@ attribute "hopsworks/monitor_max_status_poll_try",
           :description => "Default number of time the job monitor fail at polling the job status before to consider the job as failed",
           :type => 'string'
 
+attribute "gateway_ips",
+          :description => "Used for kafka to specify the gateway (and maybe other services).",
+          :type => "string"
+
 
 ##
 ##
