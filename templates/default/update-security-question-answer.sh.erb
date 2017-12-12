@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [ $# -ne 1 ] ; then
+ echo "usage: $0 email-address"
+ exit 1
+fi
+
+if [ $1 == *"%"* ] ; then
+ echo "The email address supplied cannot include wildcards ('%')"
+ echo "usage: $0 email-address"
+ exit 1
+
+fi
+
+
+<%= node["ndb"]["scripts_dir"] %>/mysql-client.sh hopsworks -e "update users set security_answer='8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918' where email like \"$1\""
+
+if [ $? -eq 0 ] ; then
+  echo "Successfully changed answer to security question for email $1 to 'admin'"
+else
+  echo "Failure. Could not change answer to security question for email $1 to 'admin'"
+fi

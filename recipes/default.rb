@@ -1178,6 +1178,15 @@ template "/usr/local/share/jupyter/nbextensions/facets-dist/facets-jupyter.html"
   action :create
 end
 
+
+template "#{theDomain}/bin/update-security-question-answer.sh" do
+  source "update-security-question-answer.sh.erb"
+  owner node['glassfish']['user']
+  group node['glassfish']['group']
+  mode 0750
+  action :create
+end
+
 directory "#{theDomain}/docroot/nbextensions/facets-dist" do
   owner node['glassfish']['user']
   group node['glassfish']['group']
