@@ -1210,3 +1210,32 @@ hops_hdfs_directory "/user/#{node['glassfish']['user']}/webserver_logs" do
   group node['glassfish']['group']
   mode "1750"
 end
+
+case node['platform']
+ when 'debian', 'ubuntu'
+
+bash "tf_serving_repo" do
+    user "root"
+    code <<-EOF
+      set -e
+      echo "deb [arch=amd64] http://storage.googleapis.com/tensorflow-serving-apt stable tensorflow-model-server tensorflow-model-server-universal" | sudo tee /etc/apt/sources.list.d/tensorflow-serving.list
+
+      curl https://storage.googleapis.com/tensorflow-serving-apt/tensorflow-serving.release.pub.gpg | sudo apt-key add -
+     apt-get update 
+     touch #{theDomain}/.tf_ubuntu_repo
+    EOF
+    not_if { File::exists("#{theDomain}/.tf_ubuntu_repo") }
+end
+   
+bash "tf_serving" do
+    user "root"
+    code <<-EOF
+      set -e
+      pip install tensorflow-serving-api --upgrade
+    EOF
+end
+package "tensorflow-model-server" do
+ action :upgrade
+end
+
+end

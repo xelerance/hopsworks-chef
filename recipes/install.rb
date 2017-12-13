@@ -128,6 +128,12 @@ when "debian"
   package "dtrx"
   package "libkrb5-dev"
 
+  # https://www.tensorflow.org/serving/setup
+tf_serving_libs = %w{ curl libcurl3-dev git libfreetype6-dev libpng12-dev libzmq3-dev pkg-config python-dev python-numpy python-pip software-properties-common swig zip zlib1g-dev }
+
+  for lib in tf_serving_libs do
+     package lib
+  end
 when "rhel"
   package "krb5-libs"
 
