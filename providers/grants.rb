@@ -66,7 +66,7 @@ action :create_tables do
       #{exec} -e \"CREATE DATABASE IF NOT EXISTS hopsworks CHARACTER SET latin1\"
       #{exec} #{db} < #{new_resource.tables_path}
     EOF
-    not_if "#{exec} -e 'show databases' | grep hopsworks"
+    not_if "#{exec} hopsworks -e 'show tables' | grep conda_commands"
   end
 
 #
