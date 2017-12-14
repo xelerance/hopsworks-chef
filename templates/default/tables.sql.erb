@@ -862,8 +862,7 @@ CREATE TABLE `roles` (
   `webport` int(11) DEFAULT NULL,
   `startTime` bigint(20) DEFAULT NULL,
   `stopTime` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`hostid`) REFERENCES `hosts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+  PRIMARY KEY (`id`)
 ) ENGINE=ndbcluster DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 
 CREATE TABLE `commands` (
