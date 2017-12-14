@@ -1217,7 +1217,7 @@ bash "tf_serving_repo" do
      apt-get update 
      touch #{theDomain}/.tf_ubuntu_repo
     EOF
-    not_if { File::exists("#{theDomain}/.tf_ubuntu_repo") }
+    not_if { File::exist?("#{theDomain}/.tf_ubuntu_repo") }
 end
    
 bash "tf_serving" do
