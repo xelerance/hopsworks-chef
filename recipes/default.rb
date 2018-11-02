@@ -970,13 +970,13 @@ bash 'enable_sso' do
 end
 
 
-bash "pip_upgrade" do
-    user "root"
-    code <<-EOF
-      set -e
-      pip install --upgrade pip pip==18.0
-    EOF
-end
+#bash "pip_upgrade" do
+#    user "root"
+#    code <<-EOF
+#      set -e
+#      pip install --upgrade pip pip==18.0
+#    EOF
+#end
 
 scala_home=
 case node['platform']
