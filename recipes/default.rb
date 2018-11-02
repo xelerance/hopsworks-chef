@@ -993,7 +993,7 @@ bash "pip_upgrade" do
     user "root"
     code <<-EOF
       set -e
-      pip install --upgrade pip
+      pip install --upgrade pip pip==18.0
     EOF
 end
 
